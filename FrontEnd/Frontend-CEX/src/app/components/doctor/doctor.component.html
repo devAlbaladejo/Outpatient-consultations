@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en-EN">
+
+<head>
+  <title>Doctors Management</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" src="doctor.component.css" />
+</head>
+
+<body class="p-2">
+  <header>
+    <h1>Doctors Management</h1>
+  </header>
+  <main>
+    <mat-tab-group>
+      <!-- Active Doctors -->
+      <mat-tab label="Active Doctor">
+        <div class="col-md-12 p-2">
+          <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#doctorForm">
+            <i class="fa fa-save"></i> New doctor
+          </button>
+          <table class="table mt-2 table-bordered">
+            <thead class="table-primary">
+              <tr>
+                <th>Name</th>
+                <th>Speciality</th>
+                <th>Options</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let doctor of listActiveDoctors">
+                <td>{{ doctor.name }}</td>
+                <td>{{ doctor.speciality.name }}</td>
+                <td>
+                  <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                    data-bs-target="#doctorForm" (click)="selectedDoctor(doctor)">
+                    <i class="fa fa-pencil"></i>
+                  </button>
+                  &nbsp;
+                  <button type="button" class="btn btn-danger btn-sm" (click)="deleteDoctor(doctor.id)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </mat-tab>
+      <!-- Deleted Doctors -->
+      <mat-tab label="Deleted Doctors">
+        <div class="col-md-12 p-2">
+          <table class="table mt-2 table-bordered">
+            <thead class="table-primary">
+              <tr>
+                <th>Name</th>
+                <th>Speciality</th>
+                <th>Options</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let doctor of listDeletedDoctors">
+                <td>{{ doctor.name }}</td>
+                <td>{{ doctor.speciality.name }}</td>
+                <td>
+                  <button type="button" class="btn btn-primary btn-sm" (click)="recoverDoctor(doctor)">
+                    <i class="fa fa-reply"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+
+    <!-- Doctor form-->
+    <div class="modal fade" id="doctorForm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 *ngIf="!isUpdate" class="modal-title fs-5">New Doctor</h1>
+            <h1 *ngIf="isUpdate" class="modal-title fs-5">Update Doctor</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+              (click)="newDoctor()"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="formDoctor">
+              <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Name:</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" formControlName="name" />
+                </div>
+                <!-- Check if user insert doctor's name -->
+                <div *ngIf="
+                      formDoctor.controls['name'].invalid &&
+                      (formDoctor.controls['name'].dirty ||
+                        formDoctor.controls['name'].touched)">
+                  <small class="text-danger">Name is required</small>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Speciality:</label>
+                <div class="col-sm-10">
+                  <select class="form-control" formControlName="speciality">
+                    <option value="null" selected disabled hidden></option>
+                    <option *ngFor="let speciality of listSpecialities" [value]="speciality.code">
+                      {{ speciality.name }}
+                    </option>
+                  </select>
+                </div>
+                <!-- Check if user select any speciality -->
+                <div *ngIf="
+                      formDoctor.controls['speciality'].invalid &&
+                      (formDoctor.controls['speciality'].dirty ||
+                        formDoctor.controls['speciality'].touched)">
+                  <small class="text-danger">Choose any speciality</small>
+                </div>
+              </div>
+            </form>
+          </div>
+          <!-- Form Buttons -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" (click)="cancel()">
+              Close
+            </button>
+            <button *ngIf="!isUpdate" [disabled]="(!formDoctor.controls['name'].valid) || (!formDoctor.controls['speciality'].valid)" type="button"
+              class="btn btn-success btn-sm" data-bs-dismiss="modal" (click)="saveDoctor()">
+              Save
+            </button>
+            <button *ngIf="isUpdate" [disabled]="(!formDoctor.controls['name'].valid) || (!formDoctor.controls['speciality'].valid)" type="button"
+              class="btn btn-warning btn-sm" data-bs-dismiss="modal" (click)="updateDoctor()">
+              Update
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+
+</html>

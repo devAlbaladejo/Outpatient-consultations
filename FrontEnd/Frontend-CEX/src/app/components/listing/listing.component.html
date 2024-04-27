@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en-En">
+  <head>
+    <title>Listado de consultas</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" src="listing.component.css">
+  </head>
+  <body>
+  <div class="col-md-12 p-2">
+    <!-- Options and table header -->
+    <div class="fixed">
+      <button *ngIf="role == 'supervisor'" type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#reportForm"><i class="fa fa-file-excel-o"></i> Report</button>
+      <div class="changeWeek">
+        <button type="button" class="btn btn-primary btn-sm" (click)="previous()"><<</button>
+        <button type="button" class="btn btn-primary btn-sm" (click)="next()">>></button>
+      </div>
+      <table class="table mt-2 table-bordered">
+        <thead class="table-primary">
+          <tr>
+            <th rowspan="2">Rooms</th>
+            <th colspan="2" *ngFor="let day of daysOfWeek">{{day | date: 'EEEE'}} ({{day | date: 'dd/MM/yyyy'}})</th>
+          </tr>
+          <tr>
+            <th *ngFor="let day of daysOfWeek2; let even = even; let odd = odd"><p *ngIf="even">Morning</p><p *ngIf="odd">Afternoon</p></th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    
+    <!-- listing table -->
+    <table class="table table-bordered">
+      <tbody>
+        <tr *ngFor="let room of listRooms">
+          <td>{{room.name}}</td>
+          <td  class="content" *ngFor="let day of daysOfWeek2; let even = even; let odd = odd">
+            <div *ngIf="room.active == 0; else busyRoom" class="disabledRoom">&#00;</div>
+            <ng-template #busyRoom>
+            <!-- Morning -->
+            <div class="schedule" *ngIf="even">
+              <div class="listings" *ngFor="let listing of listFilteredListing">
+                <div class="role" *ngIf="role == 'supervisor'">
+                  <div class="selectable data" [ngStyle]="{'background-color': (listing.diary != null ? listing.diary.color : 'white')}" *ngIf="((listing.room.id | json) == (room.id | json)) && ((listing.schedule) == 'M') && ((listing.date | json) == (day | date: '&#34;yyyy-MM-dd&#34;'))" data-bs-toggle="modal" data-bs-target="#listingForm" (click)="selectedListing(listing)">
+                    <p><b>Doctor: </b>{{listing.doctor.name}} ({{listing.doctor.speciality.code}})</p>
+                    <p *ngIf="listing.doctorComment != null && listing.doctorComment != ''"><b>Doctor Comment: </b>{{listing.doctorComment}}</p>
+                    <p *ngIf="listing.assistant != null"><b>Assistant: </b><span [ngStyle]="{'background-color': listing.assistant.color}">{{listing.assistant.name}}</span></p>
+                    <p *ngIf="listing.assistantComment != null && listing.assistantComment != ''"><b>Assistant Comment: </b>{{listing.assistantComment}}</p>
+                  </div>
+                  <button type="button" class="btn btn-success btn-sm emptyRoom" data-bs-toggle="modal" data-bs-target="#listingForm" (click)="fillRoom(room.id,day,'M')"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                </div>
+                <div class="role" *ngIf="role == 'assistant'">
+                  <div class="data" [ngStyle]="{'background-color': (listing.diary != null ? listing.diary.color : 'white')}" *ngIf="((listing.room.id | json) == (room.id | json)) && ((listing.schedule) == 'M') && ((listing.date | json) == (day | date: '&#34;yyyy-MM-dd&#34;'))">
+                    <p><b>Doctor: </b>{{listing.doctor.name}} ({{listing.doctor.speciality.code}})</p>
+                    <p *ngIf="listing.doctorComment != null && listing.doctorComment != ''"><b>Doctor Comment: </b>{{listing.doctorComment}}</p>
+                    <p *ngIf="listing.assistant != null"><b>Assistant: </b><span [ngStyle]="{'background-color': listing.assistant.color}">{{listing.assistant.name}}</span></p>
+                    <p *ngIf="listing.assistantComment != null && listing.assistantComment != ''"><b>Assistant Comment: </b>{{listing.assistantComment}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Afternoon -->
+            <div class="schedule" *ngIf="odd">
+              <div class="listings" *ngFor="let listing of listFilteredListing">
+                <div class="role" *ngIf="role == 'supervisor'">
+                  <div class="selectable data" [ngStyle]="{'background-color': (listing.diary != null ? listing.diary.color : 'white')}" *ngIf="((listing.room.id | json) == (room.id | json)) && ((listing.schedule) == 'A') && ((listing.date | json) == (day | date: '&#34;yyyy-MM-dd&#34;'))" data-bs-toggle="modal" data-bs-target="#listingForm" (click)="selectedListing(listing)">
+                    <p><b>Doctor: </b>{{listing.doctor.name}} ({{listing.doctor.speciality.code}})</p>
+                    <p *ngIf="listing.doctorComment != null && listing.doctorComment != ''"><b>Doctor Comment: </b>{{listing.doctorComment}}</p>
+                    <p *ngIf="listing.assistant != null"><b>Assistant: </b><span [ngStyle]="{'background-color': listing.assistant.color}">{{listing.assistant.name}}</span></p>
+                    <p *ngIf="listing.assistantComment != null && listing.assistantComment != ''"><b>Assistant Comment: </b>{{listing.assistantComment}}</p>
+                  </div>
+                  <button type="button" class="btn btn-success btn-sm emptyRoom" data-bs-toggle="modal" data-bs-target="#listingForm" (click)="fillRoom(room.id,day,'A')"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                </div>
+                <div class="role" *ngIf="role == 'assistant'">
+                  <div class="data" [ngStyle]="{'background-color': (listing.diary != null ? listing.diary.color : 'white')}" *ngIf="((listing.room.id | json) == (room.id | json)) && ((listing.schedule) == 'A') && ((listing.date | json) == (day | date: '&#34;yyyy-MM-dd&#34;'))">
+                    <p><b>Doctor: </b>{{listing.doctor.name}} ({{listing.doctor.speciality.code}})</p>
+                    <p *ngIf="listing.doctorComment != null && listing.doctorComment != ''"><b>Doctor Comment: </b>{{listing.doctorComment}}</p>
+                    <p *ngIf="listing.assistant != null"><b>Assistant: </b><span [ngStyle]="{'background-color': listing.assistant.color}">{{listing.assistant.name}}</span></p>
+                    <p *ngIf="listing.assistantComment != null && listing.assistantComment != ''"><b>Assistant Comment: </b>{{listing.assistantComment}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+</div>
+  
+  <!-- Listing form-->
+  <div class="modal fade" id="listingForm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 *ngIf="!isUpdate" class="modal-title fs-5">New Listing</h1>
+            <h1 *ngIf="isUpdate" class="modal-title fs-5">Update Listing</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="newListing()"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="formListing">
+              <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Doctor:</label>
+                <div class="col-sm-10">
+                  <select class="form-control" formControlName="doctor">
+                    <option value="null" selected disabled hidden></option>
+                    <option *ngFor="let doctor of listDoctors" [value]="doctor.id">{{doctor.name}} ({{doctor.speciality.name}})</option>
+                  </select>
+                </div>
+                <!-- Check if user select any doctor -->
+                <div *ngIf="formListing.controls['doctor'].invalid &&
+                (formListing.controls['doctor'].dirty ||
+                formListing.controls['doctor'].touched)">
+                <small class="text-danger">Choose any doctor</small>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label">Doctor Comment:</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" formControlName="doctorComment">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label">Assistant:</label>
+                <div class="col-sm-8">
+                  <select class="form-control" formControlName="assistant">
+                    <option value="null" selected disabled hidden></option>
+                    <option *ngFor="let assistant of listAssistants" [value]="assistant.id">{{assistant.name}}</option>
+                  </select>
+                </div>
+                <button *ngIf="formListing.controls['assistant'].value != null" type="button" class="btn btn-danger btn-sm col-sm-1" (click)="removeAssistant()">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </div>
+              <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label">Assistant Comment:</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" formControlName="assistantComment">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Room:</label>
+                <div class="col-sm-10">
+                  <select class="form-control" formControlName="room">
+                    <option value="null" selected disabled hidden></option>
+                    <option *ngFor="let room of listActiveRooms" [value]="room.id">{{room.name}}</option>
+                  </select>
+                </div>
+                <!-- Check if user select any room -->
+                <div *ngIf="formListing.controls['room'].invalid &&
+                (formListing.controls['room'].dirty ||
+                formListing.controls['room'].touched)">
+                <small class="text-danger">Choose any room</small>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Date:</label>
+                <div class="col-sm-10">
+                  <input type="date" class="form-control" formControlName="date">
+                </div>
+                <!-- Check if user select any date -->
+                <div *ngIf="formListing.controls['date'].invalid &&
+                (formListing.controls['date'].dirty ||
+                formListing.controls['date'].touched)">
+                <small class="text-danger">Choose any date</small>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Schedule:</label>
+                <div class="col-sm-10">
+                  <select class="form-control" formControlName="schedule">
+                    <option value="null" selected disabled hidden></option>
+                    <option value="M">Morning</option>
+                    <option value="A">Afternoon</option>
+                  </select>
+                </div>
+                <!-- Check if user select any schedule -->
+                <div *ngIf="formListing.controls['schedule'].invalid &&
+                (formListing.controls['schedule'].dirty ||
+                formListing.controls['schedule'].touched)">
+                <small class="text-danger">Choose any schedule</small>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label">Diary:</label>
+                <div class="col-sm-8">
+                  <select class="form-control" formControlName="diary">
+                    <option value="null" selected disabled hidden></option>
+                    <option *ngFor="let diary of listDiaries" [value]="diary.id">{{diary.state}}</option>
+                  </select>
+                </div>
+                <button *ngIf="formListing.controls['diary'].value != null" type="button" class="btn btn-danger btn-sm col-sm-1" (click)="removeDiary()">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </div>
+             </form>
+          </div>
+          <!-- Listing Form Buttons -->
+          <div class="modal-footer formButtons">
+            <div>
+              <button *ngIf="isUpdate" type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal" (click)="deleteListing()">Delete</button>
+            </div>
+            <div>
+              <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" (click)="cancel()">Close</button>
+              <button *ngIf="!isUpdate" [disabled]="(!formListing.controls['doctor'].valid) || (!formListing.controls['room'].valid) || (!formListing.controls['date'].valid) || (!formListing.controls['schedule'].valid)" type="button" class="btn btn-success btn-sm" data-bs-dismiss="modal" (click)="saveListing()">Save</button>
+              <button *ngIf="isUpdate" [disabled]="(!formListing.controls['doctor'].valid) || (!formListing.controls['room'].valid) || (!formListing.controls['date'].valid) || (!formListing.controls['schedule'].valid)" type="button" class="btn btn-warning btn-sm" data-bs-dismiss="modal" (click)="updateListing()">Update</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Report form-->
+    <div class="modal fade" id="reportForm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5">Report</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="formReport">
+              <div class="mb-3 row">
+                <label class="col-sm-3 col-form-label"><span class="text-danger">*</span>Start Date:</label>
+                <div class="col-sm-9">
+                  <input type="date" class="form-control" formControlName="startDate">
+                </div>
+                <!-- Check if user select any start date -->
+                <div *ngIf="formReport.controls['startDate'].invalid &&
+                (formReport.controls['startDate'].dirty ||
+                formReport.controls['startDate'].touched)">
+                <small class="text-danger">Choose any start date</small>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label class="col-sm-3 col-form-label">Only start day:</label>
+                <div class="col-sm-9">
+                  <!-- 
+                    Checked: Only one day
+                    Unchecked: Two days or more
+                  -->
+                  <input type="checkbox" #chkEnable (change)="disableEnableEndDate(chkEnable.checked)">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label class="col-sm-3 col-form-label">End Date:</label>
+                <div class="col-sm-9">
+                  <input type="date" class="form-control" formControlName="endDate">
+                </div>
+                <!-- Check if user select any end date -->
+                <div *ngIf="formReport.controls['endDate'].invalid &&
+                (formReport.controls['endDate'].dirty ||
+                formReport.controls['endDate'].touched)">
+                <small class="text-danger">Choose any end date</small>
+                </div>
+              </div>
+            </form>
+          </div>
+          <!-- Report Form Buttons -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"
+              (click)="cancel()">Close</button>
+            <button [disabled]="!formReport.controls['startDate'].valid || (!chkEnable.checked && formReport.controls['endDate'].value == null)" type="button"
+              class="btn btn-success btn-sm" data-bs-dismiss="modal" (click)="makeReport()">Report</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+

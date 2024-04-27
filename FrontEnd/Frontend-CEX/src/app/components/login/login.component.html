@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en-EN">
+    <head>
+    	<meta charset="UTF-8">
+    	<title>Login</title>
+    	<link rel="stylesheet" href="login.component.css">
+    </head>
+    <body>
+    	<div class="box">
+			<!-- Login Form -->
+    		<form [formGroup]="formLogin">
+    			<h2>Login</h2>
+    			<div class="inputBox">
+    				<input type="text" formControlName="email" required>
+    				<span>Email</span>
+    				<i></i>
+    			</div>
+    			<div class="inputBox">
+    				<input type="password" formControlName="password" required>
+    				<span>Password</span>
+    				<i></i>
+    			</div>
+    			<input type="submit" [disabled]="(!formLogin.controls['email'].valid) || (!formLogin.controls['password'].valid)" name="login" value="Login" (click)="login()">
+    		</form>
+    	</div>
+    </body>
+</html>

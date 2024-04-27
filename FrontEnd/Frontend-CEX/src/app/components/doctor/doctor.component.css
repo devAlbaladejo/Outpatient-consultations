@@ -1,0 +1,29 @@
+body{
+    background-color: #696969;
+    min-height: 100vh; 
+}
+
+header{
+    background-color: #3c3c3c;
+    text-align: center; 
+    border-radius: 5px;   
+}
+
+header h1{
+    color: white;
+    padding: 10px;
+}
+
+th{ text-align: center;}
+
+.mat-mdc-tab-group, .mat-mdc-tab-nav-bar{
+    --mdc-tab-indicator-active-indicator-color: orange;
+    --mat-tab-header-active-label-text-color: orange;
+    --mat-tab-header-active-focus-label-text-color: orange;
+    --mat-tab-header-active-hover-label-text-color: orange;
+    --mat-tab-header-active-focus-indicator-color: orange;
+    --mat-tab-header-active-hover-indicator-color: orange;
+    --mat-tab-header-inactive-focus-label-text-color: #48d1cc;
+    --mat-tab-header-inactive-hover-label-text-color: #48d1cc;
+    --mat-tab-header-inactive-label-text-color: white;
+}

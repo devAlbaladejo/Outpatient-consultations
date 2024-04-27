@@ -1,0 +1,17 @@
+body{
+    background-color: #696969;
+    min-height: 100vh;
+}
+
+header{
+    background-color: #3c3c3c;
+    text-align: center;    
+    border-radius: 5px;
+}
+
+header h1{
+    color: white;
+    padding: 10px;
+}
+
+th{ text-align: center;}

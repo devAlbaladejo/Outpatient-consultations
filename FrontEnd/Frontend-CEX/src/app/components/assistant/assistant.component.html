@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en-EN">
+
+<head>
+  <title>Assistants Management</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" src="assistant.component.css" />
+</head>
+
+<body class="p-2">
+  <header>
+    <h1>Assistants Management</h1>
+  </header>
+  <main>
+    <mat-tab-group>
+      <!-- Active Assistants -->
+      <mat-tab label="Active Assistants">
+        <div class="col-md-12 p-2">
+          <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#assistantForm">
+            <i class="fa fa-save"></i> New Assistant
+          </button>
+          <table class="table mt-2 table-bordered">
+            <thead class="table-primary">
+              <tr>
+                <th>Name</th>
+                <th>Color</th>
+                <th>Options</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let assistant of listActiveAssistants">
+                <td>{{ assistant.name }}</td>
+                <td [ngStyle]="{'background-color': assistant.color}"></td>
+                <td>
+                  <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                    data-bs-target="#assistantForm" (click)="selectedAssistant(assistant)">
+                    <i class="fa fa-pencil"></i>
+                  </button>
+                  &nbsp;
+                  <button type="button" class="btn btn-danger btn-sm" (click)="deleteAssistant(assistant.id)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </mat-tab>
+      <!-- Deleted Assistants -->
+      <mat-tab label="Deleted Assistants">
+        <div class="col-md-12 p-2">
+          <table class="table mt-2 table-bordered">
+            <thead class="table-primary">
+              <tr>
+                <th>Name</th>
+                <th>Color</th>
+                <th>Options</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let assistant of listDeletedAssistants">
+                <td>{{ assistant.name }}</td>
+                <td [ngStyle]="{'background-color': assistant.color}"></td>
+                <td>
+                  <button type="button" class="btn btn-primary btn-sm" (click)="recoverAssistant(assistant)">
+                    <i class="fa fa-reply"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+
+    <!-- Assistant form-->
+    <div class="modal fade" id="assistantForm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 *ngIf="!isUpdate" class="modal-title fs-5">New Assistant</h1>
+            <h1 *ngIf="isUpdate" class="modal-title fs-5">Update Assistant</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+              (click)="newAssistant()"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="formAssistant">
+              <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Name:</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" formControlName="name" required>
+                </div>
+                <!-- Check if user insert assistant's name -->
+                <div *ngIf="formAssistant.controls['name'].invalid &&
+                      (formAssistant.controls['name'].dirty ||
+                      formAssistant.controls['name'].touched)">
+                  <small class="text-danger">Name is required</small>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Color:</label>
+                <div class="col-sm-10">
+                  <input type="color" class="form-control" formControlName="color">
+                </div>
+              </div>
+            </form>
+          </div>
+          <!-- Form Buttons -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"
+              (click)="cancel()">Close</button>
+            <button *ngIf="!isUpdate" [disabled]="!formAssistant.controls['name'].valid" type="button"
+              class="btn btn-success btn-sm" data-bs-dismiss="modal" (click)="saveAssistant()">Save</button>
+            <button *ngIf="isUpdate" [disabled]="!formAssistant.controls['name'].valid" type="button"
+              class="btn btn-warning btn-sm" data-bs-dismiss="modal" (click)="updateAssistant()">Update</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+
+</html>

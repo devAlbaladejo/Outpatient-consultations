@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en-EN">
+
+<head>
+  <title>Rooms Management</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" src="room.component.css">
+</head>
+
+<body class="p-2">
+  <header>
+    <h1>Rooms Management</h1>
+  </header>
+  <main>
+    <div class="col-md-12">
+      <table class="table mt-2 table-bordered">
+        <thead class="table-primary">
+          <tr>
+            <th>Name</th>
+            <th>Active</th>
+          </tr>
+        <tbody>
+          <tr *ngFor="let room of listRooms">
+            <td>{{room.name}}</td>
+            <td>
+              <button *ngIf="room.active == 1" type="button" class="btn btn-success btn-sm"
+                (click)="activedDisableRoom(room)">
+                ENABLED
+              </button>
+              <button *ngIf="room.active == 0" type="button" class="btn btn-danger btn-sm"
+                (click)="activedDisableRoom(room)">
+                DISABLED
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+
+</html>

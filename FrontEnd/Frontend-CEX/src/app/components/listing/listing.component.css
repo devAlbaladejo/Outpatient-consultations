@@ -1,0 +1,68 @@
+body{
+  background-color: #696969;
+  min-height: 100vh;
+}
+
+th{
+  width: 9vw;
+  padding: 0px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+th > p{
+  padding: 0;
+  margin: 0;
+}
+
+td{
+    width: 9vw;
+    padding: 0;
+    height: 15vh;
+    text-align: center;
+    vertical-align: middle;
+}
+
+table{
+  margin: 0; 
+  padding: 0; 
+}
+
+.fixed{
+    position: sticky;
+    top: 0;
+    background-color: gray;
+    z-index: 9; 
+    border-radius: 5px 5px 0px 0px;
+}
+
+.fixed > button{margin: 10px;}
+
+.changeWeek{
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 10px;
+}
+
+.disabledRoom{
+  background-color: gray;
+  width: 100%;
+  height: 100%;
+  cursor: not-allowed;
+}
+
+.selectable{cursor: pointer;}
+
+.formButtons{justify-content: space-between;}
+
+.emptyRoom{margin: auto;}
+
+.schedule, .listings, .role, .data{ height: 100%;}
+
+.listings{display: none;}
+
+.role, .data{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

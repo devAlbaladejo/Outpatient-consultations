@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en-EN">
+
+<head>
+  <title>HUB</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" src="listing-hub.component.css">
+</head>
+
+<body class="p-2">
+  <header>
+    <h1>Rooms HUB ({{today}} {{scheduler}})</h1>
+  </header>
+  <main>
+    <section>
+      <div *ngFor="let speciality of orderedSpecialities">
+        <h3 class="speciality">{{speciality}}</h3>
+        <div *ngFor="let listing of listListingToday">
+          <div class="card" *ngIf="listing.doctor.speciality.name == speciality">
+            <h4>Room: {{listing.room.name}}</h4>
+            <h5>{{listing.doctor.name}}</h5>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+
+</html>

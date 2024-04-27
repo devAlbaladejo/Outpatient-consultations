@@ -1,0 +1,32 @@
+body{
+    background-color: #696969;
+    min-height: 100vh; 
+}
+
+header{
+    background-color: #3c3c3c;
+    text-align: center;   
+    border-radius: 5px; 
+}
+
+header h1{
+    color: white;
+    padding: 10px;
+}
+
+.card{
+    margin: 10px;
+    padding: 10px;
+    background-color: #48d1cc;
+}
+
+.card h4{
+    font-weight: bold;
+}
+
+.speciality{
+    color: orange;
+    font-weight: bold;
+    padding: 10px;
+    border-bottom: 1px solid orange ;
+}
